@@ -1,13 +1,13 @@
 // Copyright 2019 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 // SPDX-License-Identifier: MIT-0
 
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { enableProdMode } from "@angular/core";
+import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { AppModule } from "./app/app.module";
+import { environment } from "./environments/environment";
 
-import Amplify from 'aws-amplify';
+import Amplify from "aws-amplify";
 
 if (environment.production) {
   enableProdMode();
@@ -18,8 +18,18 @@ Amplify.configure({
     region: environment.region,
     userPoolId: environment.userPoolId,
     userPoolWebClientId: environment.userPoolWebClientId,
+    identityPoolId: environment.identityPoolId
+  },
+  API: {
+    endpoints: [
+      {
+        name: "BettrAPI",
+        endpoint: "https://qiv3c39hsg.execute-api.eu-west-1.amazonaws.com/dev"
+      }
+    ]
   }
 });
 
-platformBrowserDynamic().bootstrapModule(AppModule)
+platformBrowserDynamic()
+  .bootstrapModule(AppModule)
   .catch(err => console.error(err));

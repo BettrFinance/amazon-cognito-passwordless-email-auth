@@ -1,0 +1,1 @@
+export { provideApollo } from "./provideApollo";
