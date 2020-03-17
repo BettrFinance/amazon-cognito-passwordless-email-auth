@@ -134,7 +134,9 @@ export class AnswerChallengeComponent
 
       if (user.challengeName === "CUSTOM_CHALLENGE") {
         this.getChallengeDescription();
-      } else if (loginSucceeded) {
+      }
+
+      if (loginSucceeded) {
         this.router.navigate(["/private"]);
       } else {
         this.errorMessage_.next("That's not the right code");
