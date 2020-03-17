@@ -25,8 +25,8 @@ Amplify.configure({
     endpoints: [
       {
         name: "BettrAPI",
-        endpoint: "https://qiv3c39hsg.execute-api.eu-west-1.amazonaws.com/dev",
-        region: "eu-west-1"
+        endpoint: environment.endpoint,
+        region: environment.region
       }
     ]
   }
