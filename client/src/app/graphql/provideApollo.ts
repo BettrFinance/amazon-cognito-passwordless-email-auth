@@ -13,6 +13,7 @@ export function provideApollo(httpLink: HttpLink) {
     const currentCredentials = await Auth.currentCredentials();
 
     const sessionToken = currentCredentials.sessionToken;
+    console.log(currentCredentials);
     console.log(sessionToken);
     // operation.context;
     // const options = {};

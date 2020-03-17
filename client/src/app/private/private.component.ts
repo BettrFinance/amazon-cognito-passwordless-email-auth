@@ -29,8 +29,8 @@ export class PrivateComponent implements OnInit {
   private graphql_ping_ = new BehaviorSubject("");
   public graphql_ping = this.graphql_ping_.asObservable();
 
-  private api_ping_ = new BehaviorSubject("");
-  public api_ping = this.api_ping_.asObservable();
+  private api_status_ = new BehaviorSubject("");
+  public api_status = this.api_status_.asObservable();
 
   constructor(private auth: AuthService, private apollo: Apollo) {}
 
@@ -52,12 +52,12 @@ export class PrivateComponent implements OnInit {
         }
       });
 
-    API.get("BettrAPI", "/ping", {
+    API.get("BettrAPI", "/status", {
       response: true
     })
       .then(response => {
         console.log(response);
-        this.graphql_ping_.next("pong");
+        this.api_status_.next("status");
       })
       .catch(error => {
         console.error(error.response || error);

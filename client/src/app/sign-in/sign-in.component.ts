@@ -28,8 +28,8 @@ export class SignInComponent implements OnInit {
   private graphql_ping_ = new BehaviorSubject("");
   public graphql_ping = this.graphql_ping_.asObservable();
 
-  private api_ping_ = new BehaviorSubject("");
-  public api_ping = this.api_ping_.asObservable();
+  private api_status_ = new BehaviorSubject("");
+  public api_status = this.api_status_.asObservable();
 
   constructor(
     private router: Router,
@@ -50,21 +50,21 @@ export class SignInComponent implements OnInit {
         console.log(result);
         this.graphql_ping_.next(result.data && result.data["ping"]);
         if (result.errors) {
-          this.errorMessage_.next(result.errors[0].message);
+          this.graphql_ping_.next(result.errors[0].message);
         }
       });
 
-    API.get("BettrAPI", "/ping", {
+    API.get("BettrAPI", "/status", {
       response: true
     })
       .then(response => {
         console.log(response);
-        this.graphql_ping_.next("pong");
+        this.api_status_.next("status");
       })
       .catch(error => {
         console.error(error.response || error);
 
-        this.errorMessage_.next(error.response || error);
+        this.api_status_.next(error.response || error);
       });
   }
 
@@ -72,7 +72,8 @@ export class SignInComponent implements OnInit {
     this.busy_.next(true);
     this.errorMessage_.next("");
     try {
-      await this.auth.signIn(this.email.value);
+      let user = await this.auth.signIn(this.email.value);
+      console.log(user);
       this.router.navigate(["/enter-secret-code"]);
     } catch (err) {
       this.errorMessage_.next(err.message || err);

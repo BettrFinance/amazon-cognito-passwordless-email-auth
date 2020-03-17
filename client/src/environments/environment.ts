@@ -4,13 +4,11 @@
 
 export const environment = {
   production: false,
-  region: "eu-west-1",
-  userPoolId: "eu-west-1_ZucbyYBBr",
-  userPoolWebClientId: "2vp35v0ol43m6hv25bu8ajp10b",
-  identityPoolId: "eu-west-1:603f72ad-2779-4387-b26d-2f1fb33ac594"
-  // userPoolId: "eu-west-1_kwcAExOgm",
-  // userPoolWebClientId: "7alg7euqkol0e9gd9d8s2f0rf5",
-  // identityPoolId: "eu-west-1:3d680008-e53f-443b-8c6b-9c5911acdabb"
+  region: "your region",
+  userPoolId: "your user pool id",
+  userPoolWebClientId: "your client id",
+  identityPoolId: "",
+  endpoint: "https://execute-api.eu-west-1.amazonaws.com/dev"
 };
 
 /*
