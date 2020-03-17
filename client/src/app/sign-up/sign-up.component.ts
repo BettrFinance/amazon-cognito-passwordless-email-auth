@@ -39,21 +39,7 @@ export class SignUpComponent {
       console.log("sign in", user);
 
       if (user.challengeName === "CUSTOM_CHALLENGE") {
-        let challengeName = await this.auth.getChallengeName();
-
-        if (challengeName == "passcode") {
-          this.router.navigate(["/enter-secret-code"], {
-            state: {
-              title: "please enter your gemalto passcode you configured"
-            }
-          });
-        } else if (challengeName == "provision") {
-          this.router.navigate(["/enter-secret-code"], {
-            state: {
-              title: "Provision gemalto and enter OTP"
-            }
-          });
-        }
+        this.router.navigate(["/enter-secret-code"]);
       }
     } catch (err) {
       console.log("err signup");

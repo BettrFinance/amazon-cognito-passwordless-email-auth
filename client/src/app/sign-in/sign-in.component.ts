@@ -74,16 +74,7 @@ export class SignInComponent implements OnInit {
     try {
       let user = await this.auth.signIn(this.email.value);
       console.log(user);
-
-      if (user.challengeName === "CUSTOM_CHALLENGE") {
-        let challengeName = await this.auth.getChallengeName();
-        console.log(challengeName);
-        if (challengeName == "passcode") {
-          this.router.navigate(["/enter-secret-code"]);
-        } else if (challengeName == "provision") {
-          this.router.navigate(["/enter-secret-code"]);
-        }
-      }
+      this.router.navigate(["/enter-secret-code"]);
     } catch (err) {
       this.errorMessage_.next(err.message || err);
     } finally {

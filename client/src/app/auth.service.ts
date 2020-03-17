@@ -28,7 +28,7 @@ export class AuthService {
     if (this.cognitoUser.challengeName === "CUSTOM_CHALLENGE") {
       let params = this.getPublicChallengeParameters();
 
-      if (params["registration_code"]) {
+      if (params["registrationCode"]) {
         console.log("provision with gemalto an navigate to OTP screen");
       }
     }
@@ -42,7 +42,7 @@ export class AuthService {
 
   public async getChallengeName() {
     let params = await this.getPublicChallengeParameters();
-    return params["custom_challenge_name"] || "";
+    return params["customChallengeName"] || "";
   }
 
   public async answerCustomChallenge(answer: string) {
@@ -53,7 +53,6 @@ export class AuthService {
     );
     console.log("answerCustomChallenge", this.cognitoUser);
     return this.cognitoUser;
-    // return this.isAuthenticated();
   }
 
   public async getPublicChallengeParameters() {

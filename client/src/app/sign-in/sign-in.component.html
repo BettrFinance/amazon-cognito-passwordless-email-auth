@@ -38,7 +38,9 @@
       [disabled]="busy | async"
     >
       <div fxFlex></div>
-      <div *ngIf="!(busy | async)">SEND SIGN-IN CODE</div>
+      <div *ngIf="!(busy | async)">
+        SIGN-IN
+      </div>
       <mat-spinner *ngIf="busy | async" [diameter]="35"></mat-spinner>
       <div fxFlex></div>
     </button>
@@ -53,11 +55,6 @@
       Not a member yet?
       <a routerLink="/sign-up" routerLinkActive="active">Sign up</a>
     </p>
-  </mat-card-content>
-
-  <mat-card-content>
-    <div fxFlex></div>
-    <p>GraphQL Ping: {{ graphql_ping | async }}</p>
   </mat-card-content>
 
   <mat-card-content>

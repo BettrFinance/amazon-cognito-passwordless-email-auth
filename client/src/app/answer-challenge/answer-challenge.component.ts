@@ -57,16 +57,6 @@ export class AnswerChallengeComponent
     // Get e-mail address the code was sent to
     // It is a public challenge parameter so let's try it that way
     this.getChallengeDescription();
-
-    this.auth.getChallengeName().then(name => {
-      if (name == "passcode") {
-        // this.desc_.next("please enter your gemalto passcode you configured");
-        this.desc_.next("Please enter the login code");
-      } else if (name == "provision") {
-        this.desc_.next("Provision gemalto and enter OTP");
-      }
-    });
-
     this.auth
       .getPublicChallengeParameters()
       .then(param => this.email_.next(param.email));
@@ -112,12 +102,10 @@ export class AnswerChallengeComponent
 
   getChallengeDescription() {
     this.auth.getChallengeName().then(name => {
-      if (name == "passcode") {
+      if (name == "OTP") {
         // this.desc_.next("please enter your gemalto passcode you configured");
-        this.desc_.next(
-          "Please enter the login code, this should be the pin defined by the user after provisioning"
-        );
-      } else if (name == "provision") {
+        this.desc_.next("Please enter your PIN");
+      } else if (name == "PROVISIONING") {
         this.desc_.next(
           "Provision gemalto and enter OTP that was sent to your email"
         );
