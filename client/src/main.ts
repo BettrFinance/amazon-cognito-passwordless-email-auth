@@ -19,12 +19,14 @@ Amplify.configure({
     userPoolId: environment.userPoolId,
     userPoolWebClientId: environment.userPoolWebClientId,
     identityPoolId: environment.identityPoolId
+    // authenticationFlowType: "CUSTOM_AUTH"
   },
   API: {
     endpoints: [
       {
         name: "BettrAPI",
-        endpoint: "https://qiv3c39hsg.execute-api.eu-west-1.amazonaws.com/dev"
+        endpoint: "https://qiv3c39hsg.execute-api.eu-west-1.amazonaws.com/dev",
+        region: "eu-west-1"
       }
     ]
   }
