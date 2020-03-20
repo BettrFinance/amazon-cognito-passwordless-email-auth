@@ -26,7 +26,17 @@ export class AuthService {
     this.cognitoUser = await Auth.signIn(email);
 
     if (this.cognitoUser.challengeName === "CUSTOM_CHALLENGE") {
-      let params = this.getPublicChallengeParameters();
+      // let params = this.getPublicChallengeParameters();
+      let params = this.cognitoUser.challengeParam;
+
+      // {
+      //   customChallengeName: "PROVISIONING",
+      //   registrationCode: akjsdhvfasdghf
+      // }
+
+      // {
+      //   customChallengeName: "OTP",
+      // }
 
       if (params["registrationCode"]) {
         console.log("provision with gemalto an navigate to OTP screen");
@@ -59,13 +69,13 @@ export class AuthService {
     return this.cognitoUser.challengeParam;
   }
 
-  public async signUp(email: string, fullName: string) {
+  public async signUp(email: string, fullName: string, phoneNumber: string) {
     const params = {
       username: email,
       password: this.getRandomString(30),
       attributes: {
         name: fullName,
-        "custom:provisioned": "0"
+        phone_number: phoneNumber
       }
     };
     return await Auth.signUp(params);
