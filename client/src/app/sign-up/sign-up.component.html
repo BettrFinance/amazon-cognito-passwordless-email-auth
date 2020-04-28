@@ -4,7 +4,6 @@
 -->
 
 <mat-card fxFlex="1 1 auto" ngClass="app-card">
-
   <mat-card-header>
     <mat-icon mat-card-avatar>lock</mat-icon>
     <mat-card-title>Please Sign Up</mat-card-title>
@@ -14,11 +13,33 @@
   <mat-card-content>
     <form fxLayout="column">
       <mat-form-field>
-        <input matInput placeholder="Full Name" [formControl]="fullName" name="name" autocomplete="name" />
+        <input
+          matInput
+          placeholder="Full Name"
+          [formControl]="fullName"
+          name="name"
+          autocomplete="name"
+        />
       </mat-form-field>
       <mat-form-field>
-        <input matInput placeholder="E-mail" [formControl]="email" type="email" email name="email"
-          autocomplete="username email" />
+        <input
+          matInput
+          placeholder="E-mail"
+          [formControl]="email"
+          type="email"
+          email
+          name="email"
+          autocomplete="username email"
+        />
+      </mat-form-field>
+      <mat-form-field>
+        <input
+          matInput
+          placeholder="Phone number"
+          [formControl]="phoneNumber"
+          name="phoneNumber"
+          autocomplete="username phoneNumber"
+        />
       </mat-form-field>
     </form>
   </mat-card-content>
@@ -38,7 +59,9 @@
 
   <mat-card-content>
     <div fxFlex></div>
-    <p>Already signed up? <a routerLink='/sign-in' routerLinkActive="active">Sign in</a></p>
+    <p>
+      Already signed up?
+      <a routerLink="/sign-in" routerLinkActive="active">Sign in</a>
+    </p>
   </mat-card-content>
-
 </mat-card>

@@ -16,6 +16,7 @@ import { BehaviorSubject } from "rxjs";
 export class SignUpComponent {
   email = new FormControl("");
   fullName = new FormControl("");
+  phoneNumber = new FormControl("");
 
   private busy_ = new BehaviorSubject(false);
   public busy = this.busy_.asObservable();
@@ -31,7 +32,8 @@ export class SignUpComponent {
     try {
       let signUp = await this.auth.signUp(
         this.email.value,
-        this.fullName.value
+        this.fullName.value,
+        this.phoneNumber.value
       );
       console.log("signUp", signUp);
       // after signup try to login
