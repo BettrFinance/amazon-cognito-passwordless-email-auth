@@ -8,7 +8,7 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   ViewChild,
-  ElementRef
+  ElementRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 import { FormControl } from "@angular/forms";
@@ -20,7 +20,7 @@ import { tap } from "rxjs/operators";
   selector: "app-answer-challenge",
   templateUrl: "./answer-challenge.component.html",
   styleUrls: ["./answer-challenge.component.css"],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AnswerChallengeComponent
   implements OnInit, OnDestroy, AfterContentInit {
@@ -30,18 +30,22 @@ export class AnswerChallengeComponent
   digit4 = new FormControl("");
   digit5 = new FormControl("");
   digit6 = new FormControl("");
+  stringAnswer = new FormControl("");
   @ViewChild("digit1el") digit1element: ElementRef;
   @ViewChild("digit2el") digit2element: ElementRef;
   @ViewChild("digit3el") digit3element: ElementRef;
   @ViewChild("digit4el") digit4element: ElementRef;
   @ViewChild("digit5el") digit5element: ElementRef;
   @ViewChild("digit6el") digit6element: ElementRef;
+  @ViewChild("stringAnswerEl") stringAnswerElement: ElementRef;
 
   private errorMessage_ = new BehaviorSubject("");
   public errorMessage = this.errorMessage_.asObservable();
 
   private busy_ = new BehaviorSubject(false);
   public busy = this.busy_.asObservable();
+
+  public showPin = false;
 
   private allSubscriptions = new Subscription();
 
@@ -56,13 +60,23 @@ export class AnswerChallengeComponent
   ngOnInit() {
     // Get e-mail address the code was sent to
     // It is a public challenge parameter so let's try it that way
-    this.getChallengeDescription();
-    this.auth
-      .getPublicChallengeParameters()
-      .then(param => this.email_.next(param.email));
+    this.getChallengeDetails()
+      .then(() => {
+        return this.auth.getPublicChallengeParameters();
+      })
+      .then((param) => this.email_.next(param.email))
+      .then(() => {
+        console.log(this.showPin);
+      });
 
-    // Move focus to next field upon entry of a digit
-    [2, 3, 4, 5, 6].forEach(digit => {
+    [
+      // Move focus to next field upon entry of a digit
+      2,
+      3,
+      4,
+      5,
+      6,
+    ].forEach((digit) => {
       const prev = this[`digit${digit - 1}`] as FormControl;
       const next = this[`digit${digit}element`] as ElementRef;
       this.allSubscriptions.add(
@@ -84,7 +98,7 @@ export class AnswerChallengeComponent
     this.allSubscriptions.add(
       this.digit1.valueChanges
         .pipe(
-          tap(value => {
+          tap((value) => {
             if (value && value.length > 1) {
               const digits = value.split("").slice(0, 6);
               this.digit1.setValue(digits[0]);
@@ -100,15 +114,23 @@ export class AnswerChallengeComponent
     );
   }
 
-  getChallengeDescription() {
-    this.auth.getChallengeName().then(name => {
-      if (name == "OTP") {
-        // this.desc_.next("please enter your gemalto passcode you configured");
+  getChallengeDetails() {
+    return this.auth.getChallengeName().then((name) => {
+      this.showPin = false;
+
+      if (name == "DEVICE_PROVISIONING") {
+        this.desc_.next("Please enter the PIN sent to your mobile");
+        this.showPin = true;
+      } else if (name == "OTP") {
         this.desc_.next("Please enter your PIN");
-      } else if (name == "PROVISIONING") {
-        this.desc_.next(
-          "Provision gemalto and enter OTP that was sent to your email"
-        );
+        this.showPin = true;
+      } else if (name == "PIN_CHANGE") {
+        this.desc_.next("Please change your pin");
+        this.showPin = true;
+      } else if (name == "TERMS_AND_CONDITIONS") {
+        this.desc_.next("Please accepts terms");
+      } else if (name == "IDENTITY_VERIFICATION") {
+        this.desc_.next("verify identity");
       }
     });
   }
@@ -118,29 +140,51 @@ export class AnswerChallengeComponent
   }
 
   ngAfterContentInit() {
-    this.digit1element.nativeElement.focus();
+    console.log(this.showPin);
+
+    if (this.digit1element) {
+      this.digit1element.nativeElement.focus();
+    }
   }
 
   public async submit() {
+    console.log(this.showPin);
+
     try {
       this.errorMessage_.next("");
       this.busy_.next(true);
-      const answer = [1, 2, 3, 4, 5, 6]
-        .map(digit => (this[`digit${digit}`] as FormControl).value)
-        .join("");
-      const user = await this.auth.answerCustomChallenge(answer);
-      const loginSucceeded = await this.auth.isAuthenticated();
-      console.log("answerCustomChallenge", user);
+      let answer;
 
-      if (user.challengeName === "CUSTOM_CHALLENGE") {
-        this.getChallengeDescription();
+      if (this.showPin) {
+        answer = [1, 2, 3, 4, 5, 6]
+          .map((digit) => (this[`digit${digit}`] as FormControl).value)
+          .join("");
+      } else {
+        answer = this.stringAnswer.value;
       }
 
-      if (loginSucceeded) {
+      const user = await this.auth.answerCustomChallenge(answer);
+      const loginSucceeded = await this.auth.isAuthenticated();
+      if (user.challengeName === "CUSTOM_CHALLENGE") {
+        this.getChallengeDetails();
+      } else if (loginSucceeded) {
         this.router.navigate(["/private"]);
       } else {
         this.errorMessage_.next("That's not the right code");
       }
+    } catch (err) {
+      console.log("here", err);
+      this.errorMessage_.next(err.message || err);
+    } finally {
+      this.busy_.next(false);
+    }
+  }
+
+  public async resendPin() {
+    this.errorMessage_.next("");
+    this.busy_.next(true);
+    try {
+      const user = await this.auth.resendPin("+720000666");
     } catch (err) {
       console.log("here", err);
       this.errorMessage_.next(err.message || err);

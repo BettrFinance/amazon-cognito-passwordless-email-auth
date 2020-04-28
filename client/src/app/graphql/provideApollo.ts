@@ -6,6 +6,8 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { ApolloLink } from "apollo-link";
 import { Auth } from "aws-amplify";
 import { setContext } from "apollo-link-context";
+import { environment } from "../../environments/environment";
+
 import aws4 from "aws4";
 
 export function provideApollo(httpLink: HttpLink) {
@@ -65,7 +67,7 @@ export function provideApollo(httpLink: HttpLink) {
   const link = ApolloLink.from([
     auth,
     httpLink.create({
-      uri: "https://qiv3c39hsg.execute-api.eu-west-1.amazonaws.com/dev/graphql"
+      uri: environment.endpoint + "/graphql"
     })
   ]);
   const cache = new InMemoryCache();

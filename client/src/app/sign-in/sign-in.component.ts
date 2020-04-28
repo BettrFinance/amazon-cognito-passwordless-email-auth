@@ -81,4 +81,20 @@ export class SignInComponent implements OnInit {
       this.busy_.next(false);
     }
   }
+
+  public async forgotPassword() {
+    this.busy_.next(true);
+    this.errorMessage_.next("");
+    try {
+      let user = await this.auth.forgotPassword(this.email.value);
+      console.log(user);
+      if (user.challengeName === "CUSTOM_CHALLENGE") {
+        this.router.navigate(["/enter-secret-code"]);
+      }
+    } catch (err) {
+      this.errorMessage_.next(err.message || err);
+    } finally {
+      this.busy_.next(false);
+    }
+  }
 }
